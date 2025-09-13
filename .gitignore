@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+*.log
+*.sqlite3
+*.db
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs (PyCharm, IDEA, etc)
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Misc
+*.swp
+*.bak
+*.tmp
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Test and coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# pytest
+.pytest_cache/
+
+# pipenv
+Pipfile.lock
