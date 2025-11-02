@@ -43,7 +43,7 @@ class Simulator:
     def writeHtml(self):
         balanceList = [bal.model_dump() for bal in self.balances]
 
-        outFileName = "G:\\My Drive\\Finanzas\\2025\\daySummary.html"
+        outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/daySummary.html"
 
         # Extract column names
         keys = list(balanceList[0].keys())

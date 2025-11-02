@@ -15,11 +15,11 @@ if __name__ == '__main__':
     createMovementsFile: bool = True
     runSimulation: bool = True
     simulationStartAmount: Decimal = Decimal(4348.07)
-    start = "2025-02-02"
+    start = "2025-09-11"
 
     parser = Parser()
     success, schedules = parser.uploadSchedules(
-        filename="G:\\My Drive\\Finanzas\\2025\\Sim1.csv"
+        filename="/home/jorge/GoogleDrive/Finanzas/2025/RawPaymentsSeptember.csv"
     )
     movementList: List[dict] = []
     movementModels: List[Movement] = []
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     movementList.sort(key=lambda mov: (mov["date"], mov["amount"]))
 
     if createMovementsFile:
-        outFileName = "G:\\My Drive\\Finanzas\\2025\\movements.csv"
+        outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/movements.csv"
         keys = list(movementList[0].keys())
         # keys = list(Movement.model_fields.keys())
         with open(outFileName, 'w', newline='') as outFile:
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         )
         simulator.writeHtml()
         # balanceList = [bal.model_dump() for bal in balanceModels]
-        # outFileName = "G:\\My Drive\\Finanzas\\2025\\daySummary.csv"
+        # outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/daySummary.html"
         # keys = list(balanceList[0].keys())
         # with open(outFileName, 'w', newline='') as outFile:
         #     dict_writer = csv.DictWriter(outFile, keys, delimiter="\t")
