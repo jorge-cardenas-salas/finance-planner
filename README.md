@@ -11,20 +11,9 @@ A Python application for financial planning and movement simulation. Upload recu
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.8+
-- pip (Python package manager)
-
-### Setup
-
-1. Clone or download the project:
 ```bash
-cd finance-planner
-```
-
-2. Install dependencies:
-```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -135,13 +124,6 @@ All amounts are handled using Python's `Decimal` type for financial accuracy (2 
 - Try a different port by modifying the `ui.run(port=8080)` line in `main.py`
 - Check that all dependencies are installed: `pip install -r requirements.txt`
 
-## Future Enhancements
-
-- [ ] Support for different date formats in CSV
-- [ ] Configurable holidays by country/region
-- [ ] Multi-year reports with year-over-year comparison
-- [ ] Budget tracking against projected expenses
-- [ ] Charts and visualizations
 
 ## License
 
