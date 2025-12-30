@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import List
+from typing import List, Optional
 
 from common.models.balance_model import Balance
 from common.models.movement_model import Movement
@@ -40,10 +40,10 @@ class Simulator:
         sortedDates.sort()
         return {key: totals[key] for key in sortedDates}
 
-    def writeHtml(self):
+    def writeHtml(self, output_path: Optional[str] = None) -> str:
         balanceList = [bal.model_dump() for bal in self.balances]
 
-        outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/daySummary.html"
+        outFileName = output_path or "/home/jorge/GoogleDrive/Finanzas/2025/daySummary.html"
 
         # Extract column names
         keys = list(balanceList[0].keys())
@@ -93,6 +93,10 @@ class Simulator:
 
         html_content += "</table>\n</body>\n</html>"
 
-        # Save to file
-        with open(outFileName, "w", encoding="utf-8") as outFile:
-            outFile.write(html_content)
+        # Save to file if output_path provided
+        if output_path:
+            with open(outFileName, "w", encoding="utf-8") as outFile:
+                outFile.write(html_content)
+
+        return html_content
+
