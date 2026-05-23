@@ -11,7 +11,13 @@ from decimal import Decimal
 from io import StringIO
 from typing import List, Tuple, Optional
 
+import os
 from nicegui import ui, app
+from fastapi.staticfiles import StaticFiles
+
+# Ensure output directory exists and is served as static files at /output
+os.makedirs("output", exist_ok=True)
+app.mount("/output", StaticFiles(directory="output"), name="output")
 
 from common.models.movement_model import Movement
 from data_upload.parser import Parser
@@ -27,6 +33,7 @@ class FinancePlannerUI:
         self.csv_buffer = None
         self.status_log = []
         self.uploaded_content: Optional[str] = None
+        self.last_html_url: Optional[str] = None
 
     def log_status(self, message: str):
         """Add message to status log and update UI."""
@@ -207,10 +214,24 @@ class FinancePlannerUI:
                 )
                 self.log_status(f"✅ Simulation complete ({len(self.balances)} daily balances).")
 
-                # Generate HTML
-                self.log_status("📊 Generating HTML report...")
-                self.html_output = simulator.writeHtml(output_path=None)
-                self.log_status("✅ HTML report ready for download.")
+                # Generate HTML and save to output/ with timestamped filename
+                self.log_status("📊 Generating HTML report and saving to output/...")
+                # ensure output dir exists
+                os.makedirs("output", exist_ok=True)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                filename = f"daySummary_{timestamp}.html"
+                full_path = os.path.join("output", filename)
+                # writeHtml writes to disk when output_path provided and returns HTML string
+                self.html_output = simulator.writeHtml(output_path=full_path)
+                # Public URL served at /output/<filename>
+                self.last_html_url = f"/output/{filename}"
+                self.log_status(f"✅ HTML report saved: {full_path}")
+                # enable See HTML report button if it exists
+                try:
+                    if hasattr(self, 'see_report_button') and self.see_report_button:
+                        self.see_report_button.enabled = True
+                except Exception:
+                    pass
 
             self.log_status("🎉 Pipeline complete! Download results below.")
 
@@ -300,10 +321,13 @@ class FinancePlannerUI:
                         on_click=lambda: self._download_csv() if self.csv_buffer else ui.notify("No CSV to download. Run simulation first.", type="warning")
                     ).props('color=info')
 
-                    ui.button(
-                        "⬇️ Download HTML Report",
-                        on_click=lambda: self._download_html() if self.html_output else ui.notify("No HTML report to download. Run simulation first.", type="warning")
+                    # Button to open the last saved HTML report in a new tab
+                    self.see_report_button = ui.button(
+                        "📄 See HTML report",
+                        on_click=lambda: ui.run_javascript(f"window.open('{self.last_html_url or ''}', '_blank')") if self.last_html_url else ui.notify("No HTML report available. Run simulation first.", type="warning")
                     ).props('color=info')
+                    # disabled until a report is generated
+                    self.see_report_button.enabled = False
 
             # Section 5: Status log
             with ui.card().classes('w-full'):

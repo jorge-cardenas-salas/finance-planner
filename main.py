@@ -14,25 +14,26 @@ from simulator import Simulator
 if __name__ == '__main__':
     createMovementsFile: bool = True
     runSimulation: bool = True
-    simulationStartAmount: Decimal = Decimal(4348.07)
-    start = "2025-09-11"
+    simulationStartAmount: Decimal = Decimal(2064.47)
+    start = "2026-04-16"
+    end = "2026-12-31"
 
     parser = Parser()
     success, schedules = parser.uploadSchedules(
-        filename="/home/jorge/GoogleDrive/Finanzas/2025/RawPaymentsSeptember.csv"
+        filename="/home/jorge/Downloads/RawPayments.csv"
     )
     movementList: List[dict] = []
     movementModels: List[Movement] = []
     allMovementModels: List[Movement] = []
     for schedule in schedules:
-        movementModels = schedule.generateMovements(start=start, end="2026-01-01")
+        movementModels = schedule.generateMovements(start=start, end=end)
         movementList.extend([mov.model_dump() for mov in movementModels])
         allMovementModels.extend(movementModels)
 
     movementList.sort(key=lambda mov: (mov["date"], mov["amount"]))
 
     if createMovementsFile:
-        outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/movements.csv"
+        outFileName = "/home/jorge/Downloads/movements.csv"
         keys = list(movementList[0].keys())
         # keys = list(Movement.model_fields.keys())
         with open(outFileName, 'w', newline='') as outFile:
@@ -47,7 +48,7 @@ if __name__ == '__main__':
             startAmount=simulationStartAmount,
             startDate=start
         )
-        simulator.writeHtml()
+        simulator.writeHtml(output_path="/home/jorge/Downloads/daySummary_2026-04-16.html")
         # balanceList = [bal.model_dump() for bal in balanceModels]
         # outFileName = "/home/jorge/GoogleDrive/Finanzas/2025/daySummary.html"
         # keys = list(balanceList[0].keys())
